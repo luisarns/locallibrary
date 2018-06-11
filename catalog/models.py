@@ -64,6 +64,14 @@ class Book(models.Model):
         Devuelve el URL a una instancia particular de Book
         """
         return reverse('book-detail', args=[str(self.id)])
+    
+    def display_genre(self):
+        """
+        Creates a string for the Genre. This is required to display genre in Admin.
+        """
+        return ', '.join([genre.name for genre in self.genre.all()[:3]])
+    
+    display_genre.short_description = 'Genre'
 
 
 class BookInstance(models.Model):
