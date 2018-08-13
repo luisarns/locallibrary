@@ -8,6 +8,10 @@ class BookListView(generic.ListView):
     model = Book
 
 
+class BookDetailView(generic.DetailView):
+    model = Book
+
+
 def index(request):
     """
     Función vista para la página inicio del sitio.
