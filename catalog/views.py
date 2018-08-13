@@ -1,7 +1,11 @@
 from django.shortcuts import render
-from .models import Book, Author, BookInstance, Genre
+from django.views import generic
+from .models import Book, Author, BookInstance
+
 
 # Create your views here.
+class BookListView(generic.ListView):
+    model = Book
 
 
 def index(request):
@@ -9,8 +13,8 @@ def index(request):
     Función vista para la página inicio del sitio.
     """
     # Genera contadores de algunos de los objetos principales
-    num_books = Book.objects.all().count()
-    num_instances = BookInstance.objects.all().count()
+    num_books = Book.objects.count()
+    num_instances = BookInstance.objects.count()
     # Libros disponibles (status = 'a')
     num_instances_available = BookInstance.objects.filter(
         status__exact='a').count()
@@ -18,9 +22,10 @@ def index(request):
     num_authors = Author.objects.count()
 
     # Renderiza la plantilla HTML index.html con los datos en la variable contexto
-    return render(
-        request,
-        'index.html',
-        context={'num_books': num_books, 'num_instances': num_instances,
-                 'num_instances_available': num_instances_available, 'num_authors': num_authors},
+    return render(request, 'index.html', context={
+            'num_books': num_books,
+            'num_instances': num_instances,
+            'num_instances_available': num_instances_available,
+            'num_authors': num_authors
+        }
     )
