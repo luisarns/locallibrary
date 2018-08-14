@@ -18,6 +18,11 @@ class AuthorListView(generic.ListView):
     paginate_by = 10
 
 
+class AuthorDetailView(generic.DetailView):
+    model = Author
+    pk_url_kwarg = 'id'
+
+
 def index(request):
     """
     Función vista para la página inicio del sitio.
