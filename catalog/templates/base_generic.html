@@ -4,7 +4,8 @@
 <head>
 
     {% block title %}
-    <title>Local Library</title>{% endblock %}
+        <title>Local Library</title>
+    {% endblock %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -29,7 +30,7 @@
                         <a href="{% url 'books' %}">All books</a>
                     </li>
                     <li>
-                        <a href="">All authors</a>
+                        <a href="{% url 'authors' %}">All authors</a>
                     </li>
                 </ul>
                 {% endblock %}
