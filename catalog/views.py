@@ -30,15 +30,18 @@ def index(request):
     # Genera contadores de algunos de los objetos principales
     num_books = Book.objects.count()
     num_instances = BookInstance.objects.count()
-    # Libros disponibles (status = 'a')
     num_instances_available = BookInstance.objects.filter(status='a').count()
-    # El 'all()' esta implícito por defecto.
     num_authors = Author.objects.count()
+    num_visits = request.session.get('num_visits', 0)
+    request.session['num_visits'] = num_visits + 1
 
-    # Renderiza la plantilla HTML index.html con los datos en la variable contexto
-    return render(request, 'index.html', context={
+    context = {
         'num_books': num_books,
         'num_instances': num_instances,
         'num_instances_available': num_instances_available,
-        'num_authors': num_authors
-    })
+        'num_authors': num_authors,
+        'num_visits': num_visits,
+    }
+
+    # Renderiza la plantilla HTML index.html con los datos en la variable contexto
+    return render(request, 'index.html', context=context)
