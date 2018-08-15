@@ -1,6 +1,8 @@
 import uuid  # Requerida para las instancias de libros únicos
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
+from datetime import date
 
 
 class Genre(models.Model):
@@ -23,11 +25,8 @@ class Language(models.Model):
     """
     Model representing a Language (e.g. English, French, Japanese, etc.)
     """
-    name = models.CharField(
-        max_length=200,
-        help_text="""
-            Enter a the book's natural language (e.g. English, French, Japanese etc.)
-        """)
+    name = models.CharField(max_length=200,
+        help_text="Enter a the book's natural language (e.g. English, French, Japanese etc.)")
 
     def __str__(self):
         """
@@ -43,18 +42,10 @@ class Book(models.Model):
 
     title = models.CharField(max_length=200)
     author = models.ForeignKey('Author', on_delete=models.SET_NULL, null=True)
-    summary = models.TextField(
-        max_length=1000, help_text="Enter a brief description of the book")
-    isbn = models.CharField(
-        'ISBN', max_length=13,
-        help_text='''
-        13 Character
-        <a href="https://www.isbn-international.org/content/what-isbn">ISBN number</a>
-        ''')
-    genre = models.ManyToManyField(
-        Genre, help_text="Select a genre for this book")
-    language = models.ForeignKey(
-        'Language', on_delete=models.SET_NULL, null=True)
+    summary = models.TextField(max_length=1000, help_text="Enter a brief description of the book")
+    isbn = models.CharField('ISBN', max_length=13, help_text='13 Character <a href="https://www.isbn-international.org/content/what-isbn">ISBN number</a>')
+    genre = models.ManyToManyField(Genre, help_text="Select a genre for this book")
+    language = models.ForeignKey('Language', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         """
@@ -83,8 +74,7 @@ class BookInstance(models.Model):
     (i.e. que puede ser prestado por la biblioteca).
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4,
-                          help_text="""
-                            ID único para este libro particular en toda la biblioteca""")
+                          help_text="ID único para este libro particular en toda la biblioteca")
     book = models.ForeignKey('Book', on_delete=models.SET_NULL, null=True)
     imprint = models.CharField(max_length=200)
     due_back = models.DateField(null=True, blank=True)
@@ -99,6 +89,7 @@ class BookInstance(models.Model):
     status = models.CharField(max_length=1, choices=LOAN_STATUS,
                               blank=True, default='m',
                               help_text='Disponibilidad del libro')
+    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         ordering = ["due_back"]
@@ -108,6 +99,12 @@ class BookInstance(models.Model):
         String para representar el Objeto del Modelo
         """
         return '%s (%s)' % (self.id, self.book.title)
+
+    @property
+    def is_overdue(self):
+        if self.due_back and date.today() > self.due_back:
+            return True
+        return False
 
 
 class Author(models.Model):
