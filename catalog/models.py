@@ -1,6 +1,7 @@
 import uuid  # Requerida para las instancias de libros únicos
 from django.db import models
 from django.urls import reverse
+from django.contrib.auth.models import User
 
 
 class Genre(models.Model):
@@ -99,6 +100,7 @@ class BookInstance(models.Model):
     status = models.CharField(max_length=1, choices=LOAN_STATUS,
                               blank=True, default='m',
                               help_text='Disponibilidad del libro')
+    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
 
     class Meta:
         ordering = ["due_back"]
