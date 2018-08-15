@@ -1,7 +1,7 @@
 {% extends "base_generic.html" %} 
 {% block content %}
 <h1>Author: {{ author }}</h1>
-<p>{{author.date_of_birth|date:"N j, Y" }} - {{author.date_of_death|date:"N j, Y"}}</p>
+<p>{{author.date_of_birth|date}} - {{author.date_of_death|date}}</p>
 
 <div style="margin-left:20px;margin-top:20px">
     <h4>Books</h4>
