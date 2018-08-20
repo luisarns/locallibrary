@@ -47,6 +47,9 @@ class Book(models.Model):
     genre = models.ManyToManyField(Genre, help_text="Select a genre for this book")
     language = models.ForeignKey('Language', on_delete=models.SET_NULL, null=True)
 
+    class Meta:
+        ordering = ["title"]
+
     def __str__(self):
         """
         String que representa al objeto Book
@@ -93,6 +96,7 @@ class BookInstance(models.Model):
 
     class Meta:
         ordering = ["due_back"]
+        permissions = (("can_mark_returned", "Set book as returned"),)
 
     def __str__(self):
         """
@@ -115,6 +119,9 @@ class Author(models.Model):
     last_name = models.CharField(max_length=100)
     date_of_birth = models.DateField(null=True, blank=True)
     date_of_death = models.DateField('Died', null=True, blank=True)
+
+    class Meta:
+        ordering = ["last_name", 'first_name']
 
     def get_absolute_url(self):
         """
